@@ -140,10 +140,62 @@ as p;
 shailesh=>
 
 
-
+insert into audiencedatanew
+select p.*
+from json_populate_recordset
+(null::audiencedatanew,
+'[{"R1_s":"JNSX","T1_s":"T87","B1_s":"I","RowKey":"JNSX_T87I",
+"Index_dt_s":"06212022","type_s":"parent","PAN_number_s":"A1PPB0970M",
+"Name_s":"KEITH BORTHWICK",
+"ACCOUNT":{"R1_s":"JNSX","T1_s":"T87","B1_s":"I","type_s":"child",
+"RowKey":"JNSX_T87I_ACCOUNT_1143969242_DY_DP_R","Folio_Number_s":"1143969242"}
+}]')
+as p;
  
 
  
  
  
- 
+   CREATE TYPE "ACCOUNT_TYPE" AS (
+       "RowKey"     varchar(100),
+       "R1_s"     varchar(100),
+       "T1_s"     varchar(10),
+       "B1_s"     varchar(10),
+       "type_s"   varchar(10),
+       "Folio_Number_s" integer
+   );
+
+  
+
+   create table audiencedatanew111
+   (
+    "RowKey"    varchar(100) primary key,
+    "T1_s"      varchar(10) not null,
+    "B1_s"      varchar(10) not null,
+    "R1_s"      varchar(10) not null,
+    "Index_dt_s" varchar(10) null,
+    "type_s"     varchar(10) not null,
+    "PAN_number_s"   varchar(100) not null,
+    "Name_s" varchar(100) not null,
+    "ACCOUNT" "ACCOUNT_TYPE"[]
+   );
+
+
+select p.*
+from json_populate_recordset
+(null::audiencedatanew111,
+'[{"R1_s":"HD6H","T1_s":"T87","B1_s":"I","RowKey":"HD6H_T87I",
+"Index_dt_s":"06212022","type_s":"parent","PAN_number_s":"8QUPP3162M",
+"Name_s":"SMT SHIVANI PATNAIK"},
+{"R1_s":"JNSX","T1_s":"T87","B1_s":"I","RowKey":"JNSX_T87I",
+"Index_dt_s":"06212022","type_s":"parent","PAN_number_s":"A1PPB0970M",
+"Name_s":"KEITH BORTHWICK",
+"ACCOUNT":[{"R1_s":"JNSX","T1_s":"T87","B1_s":"I","type_s":"child",
+"RowKey":"JNSX_T87I_ACCOUNT_1143969242_DY_DP_R","Folio_Number_s":"1143969242"},
+            {"R1_s":"JNSX","T1_s":"T87","B1_s":"I","type_s":"child",
+"RowKey":"JNSX_T87I_ACCOUNT_1143969999_DY_DP_R","Folio_Number_s":"1143969999"}]
+}]')
+as p;
+
+
+
