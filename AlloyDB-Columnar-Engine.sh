@@ -1,3 +1,81 @@
+alloydb.enable_pgaudit = on
+pgaudit.log = all
+alloydb.enable_pg_hint_plan = on
+max_connections = 2000
+google_columnar_engine.enabled=on
+google_columnar_engine.memory_size_in_mb = 40960
+
+
+sudo apt -y update && sudo apt -y upgrade
+
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release\
+ -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc\
+ | sudo apt-key add -
+
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release\
+ -cs)-pgdg main" > /etc/apt/sources.list.d/postgresql-pgdg.list' 
+
+sudo apt -y update
+
+sudo apt -y install postgresql-14
+
+
+sudo apt install xfce4 xfce4-goodies
+
+sudo apt install tightvncserver
+
+sudo apt-get install autocutsel
+
+vncserver
+
+vncserver -kill :1
+
+mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
+
+
+echo  " 
+#!/bin/bash 
+xrdb $HOME/.Xresources 
+autocutsel -fork
+startxfce4 & 
+" > ~/.vnc/xstartup
+
+sudo chmod +x ~/.vnc/xstartup
+
+vncserver -geometry 1400x1080
+
+
+
+wget \
+https://github.com/TPC-Council/HammerDB/releases/download/v4.3/HammerDB-4.3-Linux-x64-installer.run
+
+chmod +x *run
+
+./Hammer*run
+
+
+
+
+
+Determine the external IP address for your VM. You can enter the following command at the Linux prompt, or In the Console, go to Compute Engine -> VM Instances and look at the entry for my-alloydb-vm. You will see the external IP address listed. 
+
+
+curl -4 icanhazip.com
+
+
+
+
+
+
+
+
+
+
+
+
+
 CREATE DATABASE myalloydbbench;
 \c myalloydbbench;
 
@@ -23,6 +101,9 @@ SELECT * FROM tab1;
 \set AUTOCOMMIT OFF
 
 INSERT INTO tab1 VALUES(nextval('seq1'), 'My Name', CURRENT_TIMESTAMP);
+
+
+
 INSERT INTO tab1 VALUES(nextval('seq1'), 'My Name', CURRENT_TIMESTAMP);
 SELECT * FROM tab1;
 ROLLBACK;
