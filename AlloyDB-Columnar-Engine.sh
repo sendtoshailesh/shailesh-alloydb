@@ -146,9 +146,22 @@ pg_dump -Fd -j4 -v -h 10.45.195.2 -U postgres -f Backup1GB mytpch
 
 10.45.195.2
 
+
+
 psql -h 10.45.195.2 -U postgres
 
+CREATE DATABASE mytpch_clone OWNER tpch;
+CREATE DATABASE mytpch_clone_1 OWNER tpch;
+
+
 pg_restore --dbname=mytpch_clone --verbose -j 4 -U postgres -h 10.45.195.2 Backup1GB
+pg_restore --dbname=mytpch_clone_1 --verbose -j 4 -U postgres -h 10.45.195.2 Backup1GB
+
+\c mytpch_clone_1
+
+CREATE EXTENSION IF NOT EXISTS google_columnar_engine;
+CREATE EXTENSION IF NOT EXISTS pg_hint_plan;
+CREATE EXTENSION IF NOT EXISTS pgaudit;
 
 If you want to run the HammerDB benchmarks on this clone database in the future, connect to mytpch_clone as postgres and run the SQL statement  grant all privileges on all tables in schema public to tpch; . You do not need to do this now.
 
@@ -177,6 +190,10 @@ SELECT * FROM g_columnar_recommended_columns;
 
 SELECT google_columnar_engine_run_recommendation(
   64000,'PERFORMANCE_OPTIMAL'
+);
+
+SELECT google_columnar_engine_run_recommendation(
+  16000,'PERFORMANCE_OPTIMAL'
 );
 
 
