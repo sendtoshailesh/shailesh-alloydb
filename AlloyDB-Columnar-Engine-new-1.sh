@@ -359,7 +359,9 @@ Time: 804.809 ms
 
 Now we will check the recomendation to see of workload relevant columns comes as part recomendation
 
-
+SELECT google_columnar_engine_run_recommendation(
+  16000,'PERFORMANCE_OPTIMAL'
+);
 
 
 mytpch=> SELECT google_columnar_engine_run_recommendation(
