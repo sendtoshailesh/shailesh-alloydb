@@ -2,6 +2,10 @@ pgbench --host=10.45.195.25 --username=postgres -n -c 500 -j 500 -S -T 9000 -f p
 
 READ pool of 8vCPU of 4 nodes went to 100% but when added upto 8 nodes of same vcpu then CPU reduced to 50%
 
+on 2vcpu 1 node
+pgbench --host=10.45.195.25 --username=postgres -n -c 50 -j 200 -S -T 9000 -f pgbench.sql  beforedb
+
+
 
 admin_shkm_altostrat_com@instance-mumbai:~/alloydb/demo$ ls
 pgbench.sql
@@ -36,6 +40,41 @@ order by
         l_shipmode
 LIMIT 3;
 admin_shkm_altostrat_com@instance-mumbai:~/alloydb/demo$
+
+
+
+select
+        l_shipmode, n_nationkey, r_regionkey,
+        sum(case
+                when o_orderpriority = '1-URGENT'
+                        or o_orderpriority = '2-HIGH'
+                        then 1
+                else 0
+        end) as high_line_count,
+        sum(case
+                when o_orderpriority <> '1-URGENT'
+                        and o_orderpriority <> '2-HIGH'
+                        then 1
+                else 0
+        end) as low_line_count
+from
+        orders,
+        lineitem,
+        customer,
+        nation,
+        region
+where
+        o_orderkey = l_orderkey
+        and l_receiptdate >= date '1995-01-01'
+        and l_receiptdate < date '1995-01-01' + interval '1' year
+        and o_custkey = c_custkey
+        and c_custkey = n_nationkey
+        and n_nationkey = r_regionkey
+group by
+        l_shipmode, n_nationkey, r_regionkey
+order by
+        l_shipmode
+LIMIT 3;
 
 
 
