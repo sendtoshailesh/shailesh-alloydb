@@ -78,4 +78,22 @@ LIMIT 3;
 
 
 
+select
+        region, nation, count(*)
+from
+        orders,
+        lineitem,
+        customer,
+        nation,
+        region
+where
+        o_orderkey = l_orderkey
+        and o_custkey = c_custkey
+        and c_custkey = n_nationkey
+        and n_nationkey = r_regionkey
+group by
+        l_shipmode, n_nationkey, r_regionkey
+order by
+        l_shipmode
+LIMIT 3;
 
