@@ -6,7 +6,12 @@ google_columnar_engine.enabled=on
 google_columnar_engine.memory_size_in_mb = 40960
 
 show google_columnar_engine.relations;
-
+show default_statistics_target;
+show google_columnar_engine.memory_size_in_mb;
+show google_columnar_engine.relations; 
+show max_parallel_workers;
+show max_parallel_workers_per_gather;
+show work_mem;
 
 
 default_statistics_target 200
