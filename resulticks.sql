@@ -207,8 +207,19 @@ create unlogged table audience_json_load (doc jsonb);
 insert into audiencedata("RowKey","T1_s","B1_s","R1_s","Index_dt","Index_dt_s","type_s","IsEmail_b","IsMobile_b","TAN_number_s","Channel_s","Age_i","State_s","Country_s","Occupation_s","Campaign_name_s","OSType_s","Date_of_Birth_dt","Marital_Status_s","City_s","PIN_Code_s","Channel_Name_s","Classification_s","Is_Agent_s","Is_Direct_s","Is_EmailUnsubscribe_s","CustomerType_s","Clean_City_s","Is_BuddyAppUser_s","Is_B2CAppUser_s","InvestorDirectFlag_s","Name_s","First_TXN_Channel_s","First_TXN_Channel_Name_s","ABM_Channel_s","First_TXN_Date_dt","Total_Number_of_Folios_i","Total_Schemes_i","Primary_TAN_Count_i","Total_Offline_Value_d","Date_of_Birth_day_i","Date_of_Birth_month_i","Investor_Type_s","First_Transaction_Scheme_Name_s","First_Transaction_Amount_d","First_Transaction_Type_s","First_Transaction_ARN_Number_s","First_Transaction_IFA_Name_s","OTM_Enabled_Flag_s","No_Of_Years_Completed_i","First_Transaction_Date_PN_s","Stop_Marked_Flag_s","Current_Value_of_Investment_TAN_d","LastTransactionEUIN_s","Customer_Buckets_s","INVESTOR","SIP","ACCOUNT","ND","TXNChannelSummary")                         select p."RowKey",p."T1_s",p."B1_s",p."R1_s",p."Index_dt",p."Index_dt_s",p."type_s",p."IsEmail_b",p."IsMobile_b",p."TAN_number_s",p."Channel_s",p."Age_i",p."State_s",p."Country_s",p."Occupation_s",p."Campaign_name_s",p."OSType_s",p."Date_of_Birth_dt",p."Marital_Status_s",p."City_s",p."PIN_Code_s",p."Channel_Name_s",p."Classification_s",p."Is_Agent_s",p."Is_Direct_s",p."Is_EmailUnsubscribe_s",p."CustomerType_s",p."Clean_City_s",p."Is_BuddyAppUser_s",p."Is_B2CAppUser_s",p."InvestorDirectFlag_s",p."Name_s",p."First_TXN_Channel_s",p."First_TXN_Channel_Name_s",p."ABM_Channel_s",p."First_TXN_Date_dt",p."Total_Number_of_Folios_i",p."Total_Schemes_i",p."Primary_TAN_Count_i",p."Total_Offline_Value_d",p."Date_of_Birth_day_i",p."Date_of_Birth_month_i",p."Investor_Type_s",p."First_Transaction_Scheme_Name_s", p."First_Transaction_Amount_d",p."First_Transaction_Type_s",p."First_Transaction_ARN_Number_s",p."First_Transaction_IFA_Name_s",p."OTM_Enabled_Flag_s",p."No_Of_Years_Completed_i",p."First_Transaction_Date_PN_s",p."Stop_Marked_Flag_s",p."Current_Value_of_Investment_TAN_d",p."LastTransactionEUIN_s",p."Customer_Buckets_s",p."INVESTOR",p."SIP",p."ACCOUNT",p."ND",p."TXNChannelSummary" from json_populate_recordset(null::audiencedata, (select doc from audience_json_load)::json) as p where p."RowKey" is not null ;
 
 select count(distinct M."RowKey") from audiencedata AS M 
-where M."Is_Direct_s"='Yes' AND M."Investor_Type_s"='RIA'
+where M."Is_Direct_s"='Yes' 
 AND M."Occupation_s" IN ('OTHERS')  
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND M."RowKey" NOT IN (select distinct M1."RowKey" from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No')
+AND M."RowKey" NOT IN (select TC1."RowKey" from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE'));
+
+select count(distinct M."RowKey") from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
 AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
                        cross join unnest("INVESTOR") as TC
                       where TC."Folio_Applicant_Type_s"='HUF')
@@ -311,6 +322,98 @@ truncate table audience_json_load;
 copy the_table(jsonfield) 
 from '/path/to/jsondata' 
 csv quote e'\x01' delimiter e'\x02';
+
+
+\timing on
+select count(distinct M."RowKey") from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND M."RowKey" NOT IN (select distinct M1."RowKey" from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No')
+AND M."RowKey" NOT IN (select TC1."RowKey" from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE'));
+
+select distinct M."RowKey" from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND M."RowKey" NOT IN (select distinct M1."RowKey" from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No')
+AND M."RowKey" NOT IN (select TC1."RowKey" from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE'));
+
+
+explain (analyze, buffers, timing, verbose) 
+select count(distinct M."RowKey") from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND M."RowKey" NOT IN (select distinct M1."RowKey" from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No')
+AND M."RowKey" NOT IN (select TC1."RowKey" from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE'));
+
+
+
+\timing on
+select count(distinct M."RowKey") from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No'
+                      AND M1."RowKey"= M."RowKey" )
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE')
+                      AND TC1."RowKey"= M."RowKey");
+
+select distinct M."RowKey" from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No'
+                      AND M1."RowKey"= M."RowKey" )
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE')
+                      AND TC1."RowKey"= M."RowKey");
+                      
+
+explain (analyze, buffers, timing, verbose) 
+select count(distinct M."RowKey") from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No'
+                      AND M1."RowKey"= M."RowKey" )
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE')
+                      AND TC1."RowKey"= M."RowKey");
+
+
+
+shtest.public.audiencedata(Investor_Type_s,Is_Direct_s,Occupation_s,RowKey,Stop_Marked_Flag_s)
+
+
+create index idx_audiencedata_Is_Direct_s on audiencedata("Is_Direct_s");
+create index idx_audiencedata_Occupation_s on audiencedata("Occupation_s");
+create index idx_audiencedata_Stop_Marked_Flag_s on audiencedata("Stop_Marked_Flag_s");
+create index idx_audiencedata_Folio_Applicant_Type_s on audiencedata."INVESTOR".("Folio_Applicant_Type_s");
+create index idx_audiencedata_SIP_Status_s on audiencedata("SIP_Status_s");
 
 
 
