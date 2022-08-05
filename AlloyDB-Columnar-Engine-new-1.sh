@@ -5,7 +5,7 @@ max_connections = 2000
 google_columnar_engine.enabled=on
 google_columnar_engine.memory_size_in_mb = 40960
 
-show google_columnar_engine.relations;
+show google_columnar_engine.enabled;
 show default_statistics_target;
 show google_columnar_engine.memory_size_in_mb;
 show google_columnar_engine.relations; 
