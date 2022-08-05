@@ -127,6 +127,11 @@ Time: 6754.092 ms (00:06.754)
 mytpch=>
 
 
+select * from g_columnar_columns;
+select * from g_columnar_memory_usage;
+select * from g_columnar_stat_statements;
+
+
 
 STEP 2: See an Optimizer Plan in psql without the Columnar Engine and Load the Columnar Store
 2.1:  Run the following query in psql.  Note that the optimizer plan is displayed. Press RETURN repeatedly to see each line of the plan. This is query 12 from the TPC-H benchmark.  We want to find out if any orders in a certain year were marked as high priority but not shipped by air.  Note that the plan has several steps, including a parallel seq scan of the lineitem table.   If the table had indexes on l_shipdate, l_commitdate, and l_receiptdate, the optimizer may be able to choose an indexed scan; however, more indexes would be difficult to manage and would slow down DML like INSERT, UPDATE, and DELETE.  Press q when you see the END prompt.
@@ -404,6 +409,10 @@ Time: 21765.450 ms (00:21.765)
 mytpch=>
 
 Now check if colunmnar store populated with recomended columns or not
+
+select * from g_columnar_columns;
+select * from g_columnar_memory_usage;
+select * from g_columnar_stat_statements;
 
 mytpch=> SELECT * FROM g_columnar_relations;
 database_name | schema_name | relation_name | status |   size   | uncompressed_size | columnar_unit_count | invalid_block_count | block_count_in_cc | total_block_count | auto_refresh_trigger_count | auto_refresh_failure_count | auto_refresh_recent_status
