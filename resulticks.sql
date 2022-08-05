@@ -277,6 +277,16 @@ AND NOT EXISTS (select 1 from audiencedata AS M1
 
 
 
-\copy audience_json_load from '/home/admin_shkm_altostrat_com/alloydb/resulticks/SOLR_T87_I_FULL_36_6_20220621064254.json
+\copy audience_json_load from '/home/admin_shkm_altostrat_com/alloydb/resulticks/SOLR_T87_I_FULL_36_6_20220621064254.json' csv quote e'\x01' delimiter e'\x02';
+
+copy the_table(jsonfield) 
+from '/path/to/jsondata' 
+csv quote e'\x01' delimiter e'\x02';
+
+
+
+
+
+
 
 
