@@ -5,6 +5,18 @@ max_connections = 2000
 google_columnar_engine.enabled=on
 google_columnar_engine.memory_size_in_mb = 40960
 
+show google_columnar_engine.relations;
+
+
+
+default_statistics_target 200
+google_columnar_engine.enabled on
+google_columnar_engine.memory_size_in_mb 32000
+google_columnar_engine.relations shtest.public.audiencedata(Investor_Type_s,Is_Direct_s,Occupation_s,RowKey,Stop_Marked_Flag_s,Folio_Applicant_Type_s,SIP_Status_s)
+max_parallel_workers 16
+max_parallel_workers_per_gather 8
+work_mem 64000
+
 mytpch=> \a
 Output format is aligned.
 mytpch=> \z
