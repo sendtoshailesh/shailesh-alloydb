@@ -54,7 +54,7 @@ SELECT * FROM g_columnar_recommended_columns;
 SELECT * FROM g_columnar_relations;
 
 
-SELECT google_columnar_engine_run_recommendation(16000,'PERFORMANCE_OPTIMAL');
+SELECT google_columnar_engine_run_recommendation(32000,'PERFORMANCE_OPTIMAL');
 
 
 select * from g_columnar_columns;
@@ -160,7 +160,7 @@ LIMIT 3;
 
 
 SELECT google_columnar_engine_run_recommendation(
-  16000,'PERFORMANCE_OPTIMAL'
+  32000,'PERFORMANCE_OPTIMAL'
 );
 
 
@@ -171,7 +171,7 @@ select * from g_columnar_columns;
 
 SELECT google_columnar_engine_run_recommendation(0, 'FIXED_SIZE', true);
 
-
+SELECT * FROM g_columnar_relations;
 select * from g_columnar_columns;
 select * from g_columnar_memory_usage;
 select * from g_columnar_stat_statements;
