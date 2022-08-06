@@ -242,3 +242,12 @@ LIMIT 3;
 
 
 
+
+
+analyze audiencedata;
+select google_columnar_engine_drop('audiencedata');
+select google_columnar_engine_add('audiencedata', 'RowKey, Occupation_s, Is_Direct_s, Investor_Type_s, Stop_Marked_Flag_s');
+SELECT * FROM g_columnar_relations;
+
+
+
