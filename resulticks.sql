@@ -389,9 +389,9 @@ AND NOT EXISTS (select 1 from audiencedata AS M1
                       where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE')
                       AND TC1."RowKey"= M."RowKey");
                       
-
+\timing on
 explain (analyze, buffers, timing, verbose) 
-select count(distinct M."RowKey") from audiencedata AS M 
+select count(M."RowKey") from audiencedata AS M 
 where M."Is_Direct_s"='Yes' 
 AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
                        cross join unnest("INVESTOR") as TC
@@ -404,6 +404,22 @@ AND NOT EXISTS (select 1 from audiencedata AS M1
                       where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE')
                       AND TC1."RowKey"= M."RowKey");
 
+
+
+select count(M."RowKey") from audiencedata AS M 
+where M."Is_Direct_s"='Yes' 
+AND M."RowKey" IN (select distinct M1."RowKey" from audiencedata AS M1 
+                       cross join unnest("INVESTOR") as TC
+                      where TC."Folio_Applicant_Type_s"='HUF')
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                      where M1."Stop_Marked_Flag_s"='No'
+                      AND M1."RowKey"= M."RowKey" )
+AND NOT EXISTS (select 1 from audiencedata AS M1 
+                       cross join unnest("SIP") as TC1
+                      where TC1."SIP_Status_s" IN ('LIVE SIP','ACTIVE')
+                      AND TC1."RowKey"= M."RowKey");
+                      
+                      
 
 
 shtest.public.audiencedata(Investor_Type_s,Is_Direct_s,Occupation_s,RowKey,Stop_Marked_Flag_s)
