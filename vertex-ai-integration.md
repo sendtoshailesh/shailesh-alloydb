@@ -103,10 +103,72 @@ DELIMITER ','
 CSV HEADER;
 
 
-COPY persons(first_name, last_name, dob, email)
+\COPY credit_card_transactions(Time,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23,V24,V25,V26,V27,V28,Amount,Class)
 FROM '/home/admin_shkm_altostrat_com/alloydb/demo-ml-integration/ulb_fruad_detection.csv'
 DELIMITER ','
 CSV HEADER;
+
+
+
+dvdrental=> \COPY credit_card_transactions(Time,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23,V24,V25,V26,V27,V28,Amount,Class)
+FROM '/home/admin_shkm_altostrat_com/alloydb/demo-ml-integration/ulb_fruad_detection.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY 284807
+dvdrental=>
+dvdrental=> select count(*) from credit_card_transactions;
+ count
+--------
+ 284807
+(1 row)
+
+dvdrental=>
+
+
+CREATE VIEW augmented_orders AS
+  SELECT *,
+    ML_PREDICT_ROW(
+      ‘projects/74627175/locations/us-central1/endpoints/3247352816’,
+      json_build_object('instances',
+ 	    json_build_array(json_object(
+              ARRAY['time','amount','class','v1','v2','v3'],
+              ARRAY[time,amount,class,v1,v2,v3])))
+    ) AS fraud_score,
+  FROM
+    credit_card_transactions;
+
+
+
+
+CREATE VIEW augmented_orders AS
+  SELECT *,
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+ 	    json_build_array(json_object(
+              ARRAY['time','amount','class','v1','v2','v3'],
+              ARRAY[time,amount,class,v1,v2,v3])))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions;
+
+CREATE VIEW augmented_orders AS
+  SELECT *,
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+ 	    json_build_array(json_object(
+              ARRAY['time','amount','class','v1','v2','v3'],
+              ARRAY[time::text,amount::text,class::text,v1::text,v2::text,v3::text])))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions;
+
+
+dvdrental=> select * from augmented_orders;
+ERROR:  Invalid arguments: CrossRegionRequestError: Cross region requests are not supported. Cannot send request from Alloydb VM in europe-west2 to Vertex AI endpoint in us-central1. Please ensure that the Vertex AI endpoint and Alloydb VM are in the same region.
+dvdrental=>
 
 
 
