@@ -59,39 +59,54 @@ OPTIONS(
 
 
 
-CREATE TABLE `bigquery-public-data.ml_datasets.ulb_fraud_detection`
+CREATE TABLE credit_card_transactions
 (
-  Time FLOAT64,
-  V1 FLOAT64,
-  V2 FLOAT64,
-  V3 FLOAT64,
-  V4 FLOAT64,
-  V5 FLOAT64,
-  V6 FLOAT64,
-  V7 FLOAT64,
-  V8 FLOAT64,
-  V9 FLOAT64,
-  V10 FLOAT64,
-  V11 FLOAT64,
-  V12 FLOAT64,
-  V13 FLOAT64,
-  V14 FLOAT64,
-  V15 FLOAT64,
-  V16 FLOAT64,
-  V17 FLOAT64,
-  V18 FLOAT64,
-  V19 FLOAT64,
-  V20 FLOAT64,
-  V21 FLOAT64,
-  V22 FLOAT64,
-  V23 FLOAT64,
-  V24 FLOAT64,
-  V25 FLOAT64,
-  V26 FLOAT64,
-  V27 FLOAT64,
-  V28 FLOAT64,
-  Amount FLOAT64,
-  Class INT64
+  Time float8,
+  V1 float8,
+  V2 float8,
+  V3 float8,
+  V4 float8,
+  V5 float8,
+  V6 float8,
+  V7 float8,
+  V8 float8,
+  V9 float8,
+  V10 float8,
+  V11 float8,
+  V12 float8,
+  V13 float8,
+  V14 float8,
+  V15 float8,
+  V16 float8,
+  V17 float8,
+  V18 float8,
+  V19 float8,
+  V20 float8,
+  V21 float8,
+  V22 float8,
+  V23 float8,
+  V24 float8,
+  V25 float8,
+  V26 float8,
+  V27 float8,
+  V28 float8,
+  Amount float8,
+  Class INT
 )
+
+select * from credit_card_transactions;
+
+
+COPY persons(first_name, last_name, dob, email)
+FROM 'C:\sampledb\persons.csv'
+DELIMITER ','
+CSV HEADER;
+
+
+COPY persons(first_name, last_name, dob, email)
+FROM '/home/admin_shkm_altostrat_com/alloydb/demo-ml-integration/ulb_fruad_detection.csv'
+DELIMITER ','
+CSV HEADER;
+
 
 
