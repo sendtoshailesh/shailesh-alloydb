@@ -175,4 +175,7 @@ ERROR:  Invalid arguments: CrossRegionRequestError: Cross region requests are no
 dvdrental=>
 
 
+SELECT *, ML_PREDICT_ROW( 'projects/664290125703/locations/us-central1/endpoints/2021966699107975168', json_build_object('instances', json_build_array(json_object( ARRAY['time','amount','class','v1','v2','v3'], ARRAY[time::text,amount::text,class::text,v1::text,v2::text,v3::text]))) ) AS fraud_score FROM credit_card_transactions;
+
+
 
