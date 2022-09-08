@@ -178,4 +178,17 @@ dvdrental=>
 SELECT *, ML_PREDICT_ROW( 'projects/664290125703/locations/us-central1/endpoints/2021966699107975168', json_build_object('instances', json_build_array(json_object( ARRAY['time','amount','class','v1','v2','v3'], ARRAY[time::text,amount::text,class::text,v1::text,v2::text,v3::text]))) ) AS fraud_score FROM credit_card_transactions;
 
 
+dvdrental=> select * from augmented_orders;
+ERROR:  Invalid arguments: RestError[400]: {"error": "Column prefix: . Error: Missing struct property: Time."}
+dvdrental=> SELECT *, ML_PREDICT_ROW( 'projects/664290125703/locations/us-central1/endpoints/2021966699107975168', json_build_object('instances', json_build_array(json_object( ARRAY['time','amount','class','v1','v2','v3'], ARRAY[time,amount::text,class::text,v1::text,v2::text,v3::text]))) ) AS fraud_score FROM credit_card_transactions;
+ERROR:  ARRAY types double precision and text cannot be matched
+LINE 1: ...ime','amount','class','v1','v2','v3'], ARRAY[time,amount::te...
+                                                             ^
+dvdrental=>
+dvdrental=>
+dvdrental=> SELECT *, ML_PREDICT_ROW( 'projects/664290125703/locations/us-central1/endpoints/2021966699107975168', json_build_object('instances', json_build_array(json_object( ARRAY['time','amount','class','v1','v2','v3'], ARRAY[time::text,amount::text,class::text,v1::text,v2::text,v3::text]))) ) AS fraud_score FROM credit_card_transactions;
+ERROR:  Invalid arguments: RestError[400]: {"error": "Column prefix: . Error: Missing struct property: Time."}
+dvdrental=>
+
+
 
