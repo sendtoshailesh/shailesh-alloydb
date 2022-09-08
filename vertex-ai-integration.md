@@ -1,3 +1,7 @@
+CREATE EXTENSION IF NOT EXISTS google_ml_integration;
+
+GRANT EXECUTE ON FUNCTION ml_predict_row TO postgres;
+
 
 
 
