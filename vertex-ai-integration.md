@@ -192,3 +192,52 @@ dvdrental=>
 
 
 
+CREATE TABLE credit_card_transactions1 ( 
+Time text,
+ V1 text,
+ V2 text,
+ V3 text,
+ V4 text,
+ V5 text,
+ V6 text,
+ V7 text,
+ V8 text,
+ V9 text,
+ V10 text,
+ V11 text,
+ V12 text,
+ V13 text,
+ V14 text,
+ V15 text,
+ V16 text,
+ V17 text,
+ V18 text,
+ V19 text,
+ V20 text,
+ V21 text,
+ V22 text,
+ V23 text,
+ V24 text,
+ V25 text,
+ V26 text,
+ V27 text,
+ V28 text,
+ Amount text,
+ Class text );
+ 
+ 
+ 
+
+SELECT *,
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+ 	    json_build_array(json_object(
+              ARRAY['Time','amount','class','v1','v2','v3'],
+              ARRAY[time,amount,class,v1,v2,v3])))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions1;
+    
+    
+
