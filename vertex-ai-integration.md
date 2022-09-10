@@ -192,8 +192,8 @@ dvdrental=>
 
 
 
-CREATE TABLE credit_card_transactions1 ( 
-Time text,
+CREATE TABLE credit_card_transactions2 ( 
+"Time" text,
  V1 text,
  V2 text,
  V3 text,
@@ -240,4 +240,22 @@ SELECT *,
     credit_card_transactions1;
     
     
-
+SELECT *,
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+ 	    json_build_array(row_to_json(credit_card_transactions1)))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions1;
+    
+SELECT *,
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+ 	    json_build_array(row_to_json(credit_card_transactions2)))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions2;
+    
+    
