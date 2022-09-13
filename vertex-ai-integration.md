@@ -262,40 +262,40 @@ SELECT *,
 
 
 CREATE TABLE credit_card_transactions3 ( 
-Time decimal,
- V1 decimal,
- V2 decimal,
- V3 decimal,
- V4 decimal,
- V5 decimal,
- V6 decimal,
- V7 decimal,
- V8 decimal,
- V9 decimal,
- V10 decimal,
- V11 decimal,
- V12 decimal,
- V13 decimal,
- V14 decimal,
- V15 decimal,
- V16 decimal,
- V17 decimal,
- V18 decimal,
- V19 decimal,
- V20 decimal,
- V21 decimal,
- V22 decimal,
- V23 decimal,
- V24 decimal,
- V25 decimal,
- V26 decimal,
- V27 decimal,
- V28 decimal,
- Amount decimal,
- Class decimal );
+"Time" decimal,
+ "V1" decimal,
+ "V2" decimal,
+ "V3" decimal,
+ "V4" decimal,
+ "V5" decimal,
+ "V6" decimal,
+ "V7" decimal,
+ "V8" decimal,
+ "V9" decimal,
+ "V10" decimal,
+ "V11" decimal,
+ "V12" decimal,
+ "V13" decimal,
+ "V14" decimal,
+ "V15" decimal,
+ "V16" decimal,
+ "V17" decimal,
+ "V18" decimal,
+ "V19" decimal,
+ "V20" decimal,
+ "V21" decimal,
+ "V22" decimal,
+ "V23" decimal,
+ "V24" decimal,
+ "V25" decimal,
+ "V26" decimal,
+ "V27" decimal,
+ "V28" decimal,
+ "Amount" decimal,
+ "Class" decimal );
 
 
-\COPY credit_card_transactions3(Time,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23,V24,V25,V26,V27,V28,Amount,Class)
+\COPY credit_card_transactions3("Time","V1","V2","V3","V4","V5","V6","V7","V8","V9","V10","V11","V12","V13","V14","V15","V16","V17","V18","V19","V20","V21","V22","V23","V24","V25","V26","V27","V28","Amount","Class")
 FROM '/home/admin_shkm_altostrat_com/alloydb/demo-ml-integration/ulb_fruad_detection.csv'
 DELIMITER ','
 CSV HEADER;
@@ -309,5 +309,62 @@ SELECT *,
     ) AS fraud_score
   FROM
     credit_card_transactions3;
-    
+
+
+dvdrental=> drop table credit_card_transactions3;
+DROP TABLE
+dvdrental=> CREATE TABLE credit_card_transactions3 (
+"Time" decimal,
+ "V1" decimal,
+ "V2" decimal,
+ "V3" decimal,
+ "V4" decimal,
+ "V5" decimal,
+ "V6" decimal,
+ "V7" decimal,
+ "V8" decimal,
+ "V9" decimal,
+ "V10" decimal,
+ "V11" decimal,
+ "V12" decimal,
+ "V13" decimal,
+ "V14" decimal,
+ "V15" decimal,
+ "V16" decimal,
+ "V17" decimal,
+ "V18" decimal,
+ "V19" decimal,
+ "V20" decimal,
+ "V21" decimal,
+ "V22" decimal,
+ "V23" decimal,
+ "V24" decimal,
+ "V25" decimal,
+ "V26" decimal,
+ "V27" decimal,
+ "V28" decimal,
+ "Amount" decimal,
+ "Class" decimal );
+CREATE TABLE
+dvdrental=>
+dvdrental=>
+dvdrental=> \COPY credit_card_transactions3("Time","V1","V2","V3","V4","V5","V6","V7","V8","V9","V10","V11","V12","V13","V14","V15","V16","V17","V18","V19","V20","V21","V22","V23","V24","V25","V26","V27","V28","Amount","Class")
+FROM '/home/admin_shkm_altostrat_com/alloydb/demo-ml-integration/ulb_fruad_detection.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY 284807
+dvdrental=>
+dvdrental=> SELECT *,
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+            json_build_array(row_to_json(credit_card_transactions3)))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions3;
+
+
+
+
     
