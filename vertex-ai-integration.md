@@ -1,3 +1,5 @@
+```
+
 CREATE EXTENSION IF NOT EXISTS google_ml_integration;
 
 GRANT EXECUTE ON FUNCTION ml_predict_row TO postgres;
@@ -308,7 +310,18 @@ SELECT *,
  	    json_build_array(row_to_json(credit_card_transactions3)))
     ) AS fraud_score
   FROM
-    credit_card_transactions3;
+    credit_card_transactions3 limit 10;
+
+SELECT "Time",
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+ 	    json_build_array(row_to_json(credit_card_transactions3)))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions3 limit 10;
+
+
 
 
 dvdrental=> drop table credit_card_transactions3;
@@ -362,9 +375,33 @@ dvdrental=> SELECT *,
             json_build_array(row_to_json(credit_card_transactions3)))
     ) AS fraud_score
   FROM
-    credit_card_transactions3;
+    credit_card_transactions3 limit 10;
 
 
+SELECT "Time",
+    ML_PREDICT_ROW(
+      'projects/664290125703/locations/us-central1/endpoints/2021966699107975168',
+      json_build_object('instances',
+ 	    json_build_array(row_to_json(credit_card_transactions3)))
+    ) AS fraud_score
+  FROM
+    credit_card_transactions3 limit 10;
 
 
-    
+  Time |                                                                                                                                         fraud_score
+------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  282 | {"predictions": [{"classes": ["0", "1"], "scores": [0.9998194575309753, 0.0001804274070309475]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+  380 | {"predictions": [{"scores": [0.9999871850013733, 1.276578132092254e-05], "classes": ["0", "1"]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+  403 | {"predictions": [{"classes": ["0", "1"], "scores": [0.9999024271965027, 9.760318062035367e-05]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+  430 | {"predictions": [{"scores": [0.999915599822998, 8.445246930932626e-05], "classes": ["0", "1"]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+  711 | {"predictions": [{"scores": [0.9998144507408142, 0.0001855119771789759], "classes": ["0", "1"]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+  804 | {"predictions": [{"classes": ["0", "1"], "scores": [0.9999476671218872, 5.231059185462072e-05]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+  820 | {"predictions": [{"scores": [0.9999381303787231, 6.185776146594435e-05], "classes": ["0", "1"]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+  912 | {"predictions": [{"scores": [0.9996384978294373, 0.0003615196037571877], "classes": ["0", "1"]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+ 1193 | {"predictions": [{"scores": [0.9996464252471924, 0.0003535606665536761], "classes": ["0", "1"]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+ 1443 | {"predictions": [{"classes": ["0", "1"], "scores": [0.9997483491897583, 0.0002515861415304244]}], "deployedModelId": "1781336380345942016", "model": "projects/664290125703/locations/us-central1/models/2725218734280015872", "modelDisplayName": "fraud_detection", "modelVersionId": "1"}
+(10 rows)
+
+(END)
+  
+```
